@@ -1,0 +1,67 @@
+# E-commerce Platform Project Todo List
+
+## 1. Project Setup
+✔ [ ] Initialize Git repository @done(24-09-27 20:18)
+- [ ] Set up project structure for microservices
+- [ ] Configure Kafka for inter-service communication
+- [ ] Set up MongoDB databases for each service
+
+## 2. Microservices Development
+
+### 2.1 User Service
+- [ ] Implement user registration (client/seller)
+- [ ] Develop authentication system (JWT)
+- [ ] Create user profile management
+- [ ] Implement avatar upload for sellers
+
+### 2.2 Product Service
+- [ ] Develop CRUD operations for products
+- [ ] Implement seller-only access control for product management
+- [ ] Create API for product listing
+
+### 2.3 Media Service
+- [ ] Implement media upload functionality
+- [ ] Add file size limit (2MB) validation
+- [ ] Implement file type validation
+- [ ] Create API for retrieving product images
+
+## 3. Front-end Development (Angular)
+- [ ] Set up Angular project
+- [ ] Create sign-up and sign-in pages
+- [ ] Develop seller dashboard for product management
+- [ ] Implement product listing page
+- [ ] Create media management interface for sellers
+
+## 4. Security Implementation
+- [ ] Integrate Spring Security with JWT
+- [ ] Implement role-based access control
+- [ ] Set up HTTPS encryption
+- [ ] Implement password hashing and salting
+
+## 5. Error Handling and Validation
+- [ ] Implement form validation (client-side and server-side)
+- [ ] Create error handling for file uploads
+- [ ] Implement error responses for unauthorized actions
+
+## 6. Testing
+- [ ] Write unit tests for each microservice
+- [ ] Develop integration tests for inter-service communication
+- [ ] Create end-to-end tests for critical user flows
+- [ ] Perform security testing (penetration testing)
+
+## 7. Documentation
+- [ ] Write API documentation
+- [ ] Create user manual
+- [ ] Document system architecture
+
+## 8. Deployment
+- [ ] Set up CI/CD pipeline
+- [ ] Configure production environment
+- [ ] Deploy microservices
+- [ ] Deploy front-end application
+
+## 9. Final Review and Launch
+- [ ] Conduct final security review
+- [ ] Perform load testing
+- [ ] User acceptance testing
+- [ ] Launch application
