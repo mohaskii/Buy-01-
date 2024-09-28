@@ -19,5 +19,19 @@ public class Media {
         this.productId = productId;
     }
 
+    public Media() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
     // Constructors, getters, and setters
 }

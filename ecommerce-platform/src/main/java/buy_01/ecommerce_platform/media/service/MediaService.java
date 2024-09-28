@@ -12,8 +12,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.springframework.kafka.core.KafkaTemplate;
+
 @Service
 public class MediaService {
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate; // Assurez-vous que ceci est présent
 
     @Autowired
     private MediaRepository mediaRepository;
@@ -33,6 +38,9 @@ public class MediaService {
         Media media = new Media();
         media.setImagePath(this.root.resolve(file.getOriginalFilename()).toString());
         media.setProductId(productId);
+
+        // Publier l'événement `MediaUploaded` après l'upload
+        kafkaTemplate.send("media.events", "MediaUploaded", productId);
         return mediaRepository.save(media);
     }
 
