@@ -14,24 +14,39 @@ import java.util.List;
 
 @Service
 public class MediaService {
+
     @Autowired
     private MediaRepository mediaRepository;
 
     private final Path root = Paths.get("uploads");
 
-    public Media saveMedia(MultipartFile file, String productId) throws IOException {
+    public List<Media> getAllMedia() {
+        return mediaRepository.findAll();
+    }
+
+    public Media getMediaById(String id) {
+        return mediaRepository.findById(id).orElse(null);
+    }
+
+    public Media uploadMedia(MultipartFile file, String productId) throws IOException {
         Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
-        
         Media media = new Media();
         media.setImagePath(this.root.resolve(file.getOriginalFilename()).toString());
         media.setProductId(productId);
-        
         return mediaRepository.save(media);
     }
 
-    public List<Media> getMediaByProductId(String productId) {
-        return mediaRepository.findByProductId(productId);
+    public Media updateMedia(String id, Media media) {
+        Media existingMedia = getMediaById(id);
+        if (existingMedia != null) {
+            existingMedia.setImagePath(media.imagePath);
+            existingMedia.setProductId(media.productId);
+            return mediaRepository.save(existingMedia);
+        }
+        return null;
     }
 
-    // Add other methods as needed
+    public void deleteMedia(String id) {
+        mediaRepository.deleteById(id);
+    }
 }

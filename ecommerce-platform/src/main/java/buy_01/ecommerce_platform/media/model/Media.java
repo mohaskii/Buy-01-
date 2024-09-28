@@ -8,8 +8,8 @@ public class Media {
 
     @Id
     private String id;
-    private String imagePath;
-    private String productId;
+    public String imagePath;
+    public String productId;
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
