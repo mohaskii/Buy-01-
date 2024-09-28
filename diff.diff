@@ -1,0 +1,403 @@
+diff --git a/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/EcommercePlatformApplication.java b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/EcommercePlatformApplication.java
+index 43e121f..02836f8 100644
+--- a/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/EcommercePlatformApplication.java
++++ b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/EcommercePlatformApplication.java
+@@ -2,8 +2,14 @@ package buy_01.ecommerce_platform;
+ 
+ import org.springframework.boot.SpringApplication;
+ import org.springframework.boot.autoconfigure.SpringBootApplication;
++import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+ 
+ @SpringBootApplication
++@EnableMongoRepositories(basePackages = {
++    "buy_01.ecommerce_platform.user.repository",
++    "buy_01.ecommerce_platform.product.repository",
++    "buy_01.ecommerce_platform.media.repository"
++})
+ public class EcommercePlatformApplication {
+ 
+ 	public static void main(String[] args) {
+diff --git a/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/media/MediaServiceApplication.java b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/media/MediaServiceApplication.java
+index 9a6e135..e835d11 100644
+--- a/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/media/MediaServiceApplication.java
++++ b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/media/MediaServiceApplication.java
+@@ -2,8 +2,10 @@ package buy_01.ecommerce_platform.media;
+ 
+ import org.springframework.boot.SpringApplication;
+ import org.springframework.boot.autoconfigure.SpringBootApplication;
++import org.springframework.context.annotation.PropertySource;
+ 
+ @SpringBootApplication
++@PropertySource("classpath:media-service.properties")
+ public class MediaServiceApplication {
+     public static void main(String[] args) {
+         SpringApplication.run(MediaServiceApplication.class, args);
+diff --git a/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/media/pom.xml b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/media/pom.xml
+new file mode 100644
+index 0000000..a5cc76a
+--- /dev/null
++++ b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/media/pom.xml
+@@ -0,0 +1,54 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
++	<modelVersion>4.0.0</modelVersion>
++	<parent>
++		<groupId>buy_01</groupId>
++		<artifactId>ecommerce-platform</artifactId>
++		<version>0.0.1-SNAPSHOT</version>
++		<relativePath>../pom.xml</relativePath>
++	</parent>
++	<groupId>buy_01.user</groupId>
++	<artifactId>user-service</artifactId>
++	<version>0.0.1-SNAPSHOT</version>
++	<name>user-service</name>
++
++	<dependencies>
++		<!-- MongoDB dependency -->
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-data-mongodb</artifactId>
++		</dependency>
++
++		<!-- Web dependency for REST APIs -->
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-web</artifactId>
++		</dependency>
++
++		<!-- Lombok for reducing boilerplate code -->
++		<dependency>
++			<groupId>org.projectlombok</groupId>
++			<artifactId>lombok</artifactId>
++			<optional>true</optional>
++		</dependency>
++
++		<!-- Kafka for messaging (if needed) -->
++		<dependency>
++			<groupId>org.springframework.kafka</groupId>
++			<artifactId>spring-kafka</artifactId>
++		</dependency>
++
++		<!-- Testing dependencies -->
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-test</artifactId>
++			<scope>test</scope>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.kafka</groupId>
++			<artifactId>spring-kafka-test</artifactId>
++			<scope>test</scope>
++		</dependency>
++	</dependencies>
++</project>
+diff --git a/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/product/ProductServiceApplication.java b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/product/ProductServiceApplication.java
+index 3511c01..27bb0cc 100644
+--- a/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/product/ProductServiceApplication.java
++++ b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/product/ProductServiceApplication.java
+@@ -2,8 +2,10 @@ package buy_01.ecommerce_platform.product;
+ 
+ import org.springframework.boot.SpringApplication;
+ import org.springframework.boot.autoconfigure.SpringBootApplication;
++import org.springframework.context.annotation.PropertySource;
+ 
+ @SpringBootApplication
++@PropertySource("classpath:product-service.properties")
+ public class ProductServiceApplication {
+     public static void main(String[] args) {
+         SpringApplication.run(ProductServiceApplication.class, args);
+diff --git a/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/product/pom.xml b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/product/pom.xml
+new file mode 100644
+index 0000000..24bdb79
+--- /dev/null
++++ b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/product/pom.xml
+@@ -0,0 +1,54 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
++	<modelVersion>4.0.0</modelVersion>
++	<parent>
++		<groupId>buy_01</groupId>
++		<artifactId>ecommerce-platform</artifactId>
++		<version>0.0.1-SNAPSHOT</version>
++		<relativePath>../pom.xml</relativePath>
++	</parent>
++	<groupId>buy_01.product</groupId>
++	<artifactId>product-service</artifactId>
++	<version>0.0.1-SNAPSHOT</version>
++	<name>product-service</name>
++
++	<dependencies>
++		<!-- MongoDB dependency -->
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-data-mongodb</artifactId>
++		</dependency>
++
++		<!-- Web dependency for REST APIs -->
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-web</artifactId>
++		</dependency>
++
++		<!-- Lombok for reducing boilerplate code -->
++		<dependency>
++			<groupId>org.projectlombok</groupId>
++			<artifactId>lombok</artifactId>
++			<optional>true</optional>
++		</dependency>
++
++		<!-- Kafka for messaging (if needed) -->
++		<dependency>
++			<groupId>org.springframework.kafka</groupId>
++			<artifactId>spring-kafka</artifactId>
++		</dependency>
++
++		<!-- Testing dependencies -->
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-test</artifactId>
++			<scope>test</scope>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.kafka</groupId>
++			<artifactId>spring-kafka-test</artifactId>
++			<scope>test</scope>
++		</dependency>
++	</dependencies>
++</project>
+diff --git a/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/user/UserServiceApplication.java b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/user/UserServiceApplication.java
+index 512c4dd..e026244 100644
+--- a/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/user/UserServiceApplication.java
++++ b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/user/UserServiceApplication.java
+@@ -2,8 +2,10 @@ package buy_01.ecommerce_platform.user;
+ 
+ import org.springframework.boot.SpringApplication;
+ import org.springframework.boot.autoconfigure.SpringBootApplication;
++import org.springframework.context.annotation.PropertySource;
+ 
+ @SpringBootApplication
++@PropertySource("classpath:user-service.properties")
+ public class UserServiceApplication {
+     public static void main(String[] args) {
+         SpringApplication.run(UserServiceApplication.class, args);
+diff --git a/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/user/pom.xml b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/user/pom.xml
+new file mode 100644
+index 0000000..b62346b
+--- /dev/null
++++ b/ecommerce-platform/src/main/java/buy_01/ecommerce_platform/user/pom.xml
+@@ -0,0 +1,54 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
++	<modelVersion>4.0.0</modelVersion>
++	<parent>
++		<groupId>buy_01</groupId>
++		<artifactId>ecommerce-platform</artifactId>
++		<version>0.0.1-SNAPSHOT</version>
++		<relativePath>../pom.xml</relativePath>
++	</parent>
++	<groupId>buy_01.media</groupId>
++	<artifactId>media-service</artifactId>
++	<version>0.0.1-SNAPSHOT</version>
++	<name>media-service</name>
++
++	<dependencies>
++		<!-- MongoDB dependency -->
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-data-mongodb</artifactId>
++		</dependency>
++
++		<!-- Web dependency for REST APIs -->
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-web</artifactId>
++		</dependency>
++
++		<!-- Lombok for reducing boilerplate code -->
++		<dependency>
++			<groupId>org.projectlombok</groupId>
++			<artifactId>lombok</artifactId>
++			<optional>true</optional>
++		</dependency>
++
++		<!-- Kafka for messaging (if needed) -->
++		<dependency>
++			<groupId>org.springframework.kafka</groupId>
++			<artifactId>spring-kafka</artifactId>
++		</dependency>
++
++		<!-- Testing dependencies -->
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-test</artifactId>
++			<scope>test</scope>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.kafka</groupId>
++			<artifactId>spring-kafka-test</artifactId>
++			<scope>test</scope>
++		</dependency>
++	</dependencies>
++</project>
+diff --git a/ecommerce-platform/src/main/resources/media-service.properties b/ecommerce-platform/src/main/resources/media-service.properties
+new file mode 100644
+index 0000000..e7ece3e
+--- /dev/null
++++ b/ecommerce-platform/src/main/resources/media-service.properties
+@@ -0,0 +1,16 @@
++# Server port
++server.port=8083
++
++# MongoDB configuration
++spring.data.mongodb.host=localhost
++spring.data.mongodb.port=27017
++spring.data.mongodb.database=mediadb
++spring.data.mongodb.username=mediaservice
++spring.data.mongodb.password=mediapassword
++
++# Logging
++logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG
++
++# File upload configuration
++spring.servlet.multipart.max-file-size=2MB
++spring.servlet.multipart.max-request-size=2MB
+\ No newline at end of file
+diff --git a/ecommerce-platform/src/main/resources/product-service.properties b/ecommerce-platform/src/main/resources/product-service.properties
+new file mode 100644
+index 0000000..b30236b
+--- /dev/null
++++ b/ecommerce-platform/src/main/resources/product-service.properties
+@@ -0,0 +1,12 @@
++# Server port
++server.port=8082
++
++# MongoDB configuration
++spring.data.mongodb.host=localhost
++spring.data.mongodb.port=27017
++spring.data.mongodb.database=productdb
++spring.data.mongodb.username=productservice
++spring.data.mongodb.password=productpassword
++
++# Logging
++logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG
+\ No newline at end of file
+diff --git a/ecommerce-platform/src/main/resources/user-service.properties b/ecommerce-platform/src/main/resources/user-service.properties
+new file mode 100644
+index 0000000..81538b1
+--- /dev/null
++++ b/ecommerce-platform/src/main/resources/user-service.properties
+@@ -0,0 +1,12 @@
++# Server port
++server.port=8081
++
++# MongoDB configuration
++spring.data.mongodb.host=localhost
++spring.data.mongodb.port=27017
++spring.data.mongodb.database=userdb
++spring.data.mongodb.username=userservice
++spring.data.mongodb.password=userpassword
++
++# Logging
++logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG
+\ No newline at end of file
+diff --git a/ecommerce-platform/src/test/java/buy_01/ecommerce_platform/media/MongoDbConnectionTest.java b/ecommerce-platform/src/test/java/buy_01/ecommerce_platform/media/MongoDbConnectionTest.java
+new file mode 100644
+index 0000000..1e19c8f
+--- /dev/null
++++ b/ecommerce-platform/src/test/java/buy_01/ecommerce_platform/media/MongoDbConnectionTest.java
+@@ -0,0 +1,21 @@
++package buy_01.ecommerce_platform.media;
++
++import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.test.context.SpringBootTest;
++import org.springframework.data.mongodb.core.MongoTemplate;
++
++import static org.junit.jupiter.api.Assertions.assertNotNull;
++
++@SpringBootTest
++public class MongoDbConnectionTest {
++
++    @Autowired
++    private MongoTemplate mongoTemplate;
++
++    @Test
++    public void testMongoDbConnection() {
++        assertNotNull(mongoTemplate);
++        assertNotNull(mongoTemplate.getDb());
++    }
++}
+diff --git a/ecommerce-platform/src/test/java/buy_01/ecommerce_platform/product/MongoDbConnectionTest.java b/ecommerce-platform/src/test/java/buy_01/ecommerce_platform/product/MongoDbConnectionTest.java
+new file mode 100644
+index 0000000..5f34181
+--- /dev/null
++++ b/ecommerce-platform/src/test/java/buy_01/ecommerce_platform/product/MongoDbConnectionTest.java
+@@ -0,0 +1,21 @@
++package buy_01.ecommerce_platform.product;
++
++import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.test.context.SpringBootTest;
++import org.springframework.data.mongodb.core.MongoTemplate;
++
++import static org.junit.jupiter.api.Assertions.assertNotNull;
++
++@SpringBootTest
++public class MongoDbConnectionTest {
++
++    @Autowired
++    private MongoTemplate mongoTemplate;
++
++    @Test
++    public void testMongoDbConnection() {
++        assertNotNull(mongoTemplate);
++        assertNotNull(mongoTemplate.getDb());
++    }
++}
+diff --git a/ecommerce-platform/src/test/java/buy_01/ecommerce_platform/user/MongoDbConnectionTest.java b/ecommerce-platform/src/test/java/buy_01/ecommerce_platform/user/MongoDbConnectionTest.java
+new file mode 100644
+index 0000000..fd6f1e0
+--- /dev/null
++++ b/ecommerce-platform/src/test/java/buy_01/ecommerce_platform/user/MongoDbConnectionTest.java
+@@ -0,0 +1,21 @@
++package buy_01.ecommerce_platform.user;
++
++import org.junit.jupiter.api.Test;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.boot.test.context.SpringBootTest;
++import org.springframework.data.mongodb.core.MongoTemplate;
++
++import static org.junit.jupiter.api.Assertions.assertNotNull;
++
++@SpringBootTest
++public class MongoDbConnectionTest {
++
++    @Autowired
++    private MongoTemplate mongoTemplate;
++
++    @Test
++    public void testMongoDbConnection() {
++        assertNotNull(mongoTemplate);
++        assertNotNull(mongoTemplate.getDb());
++    }
++}
+\ No newline at end of file
+diff --git a/todo b/todo
+index e266f77..8f87106 100644
+--- a/todo
++++ b/todo
+@@ -2,9 +2,9 @@
+ 
+ ## 1. Project Setup
+ ✔ [ ] Initialize Git repository @done(24-09-27 20:18)
+-- [ ] Set up project structure for microservices
++✔ [ ] Set up project structure for
+ - [ ] Configure Kafka for inter-service communication
+-- [ ] Set up MongoDB databases for each service
++✔ [ ] Set up MongoDB databases for each service @done(24-09-28 11:27)
+ 
+ ## 2. Microservices Development
+ 

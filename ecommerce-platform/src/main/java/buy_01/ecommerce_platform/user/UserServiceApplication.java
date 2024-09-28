@@ -7,6 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication
 @PropertySource("classpath:user-service.properties")
 public class UserServiceApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(UserServiceApplication.class, args);
     }
