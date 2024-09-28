@@ -39,8 +39,9 @@ public class MediaService {
     public Media updateMedia(String id, Media media) {
         Media existingMedia = getMediaById(id);
         if (existingMedia != null) {
-            existingMedia.setImagePath(media.imagePath);
-            existingMedia.setProductId(media.productId);
+            // Use getters and setters instead of direct access
+            existingMedia.setImagePath(media.getImagePath());
+            existingMedia.setProductId(media.getProductId());
             return mediaRepository.save(existingMedia);
         }
         return null;

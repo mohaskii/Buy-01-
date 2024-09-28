@@ -3,18 +3,34 @@ package buy_01.ecommerce_platform.product.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+
 @Document(collection = "products")
 public class Product {
     @Id
     private String id;
+
+    @NotBlank(message = "Product name is mandatory")
     private String name;
+
+    @NotBlank(message = "Product description is mandatory")
     private String description;
+
+    @NotNull(message = "Price is mandatory")
+    @Positive(message = "Price must be greater than zero")
     private Double price;
+
+    @NotNull(message = "Quantity is mandatory")
+    @PositiveOrZero(message = "Quantity must be zero or greater")
     private Integer quantity;
+
+    @NotBlank(message = "User ID is mandatory")
     private String userId;
 
-    // Constructeurs
-
+    // Constructors
     public Product() {}
 
     public Product(String name, String description, Double price, Integer quantity, String userId) {
@@ -25,8 +41,7 @@ public class Product {
         this.userId = userId;
     }
 
-    // Getters et setters
-
+    // Getters and setters
     public String getId() {
         return id;
     }

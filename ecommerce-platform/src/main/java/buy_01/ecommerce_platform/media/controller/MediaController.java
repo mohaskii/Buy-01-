@@ -36,8 +36,7 @@ public class MediaController {
             Media media = mediaService.uploadMedia(file, productId);
             return ResponseEntity.status(HttpStatus.CREATED).body(media);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
