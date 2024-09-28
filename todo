@@ -2,9 +2,9 @@
 
 ## 1. Project Setup
 ✔ [ ] Initialize Git repository @done(24-09-27 20:18)
-- [ ] Set up project structure for microservices
+✔ [ ] Set up project structure for
 - [ ] Configure Kafka for inter-service communication
-- [ ] Set up MongoDB databases for each service
+✔ [ ] Set up MongoDB databases for each service @done(24-09-28 11:27)
 
 ## 2. Microservices Development
 
