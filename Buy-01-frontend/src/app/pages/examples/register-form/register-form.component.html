@@ -3,59 +3,84 @@
 <div class="card card-register">
   <div class="card-header">
     <img alt="Card image" class="card-img" src="assets/img/square1-red.png" />
-
     <h4 class="card-title">Register</h4>
   </div>
   <div class="card-body">
-    <form>
+    <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
       <div class="form-group">
-        <label for="inputEmail">Name</label>
+        <label for="inputName">Name</label>
         <input
           type="text"
           class="form-control"
-          id="inputEmail"
+          id="inputName"
+          name="name"
+          ngModel
           placeholder="Full Name"
         />
-        <!-- <div class="input-group-prepend">
-          <div class="input-group-text">
-            <i class="tim-icons icon-single-02"></i>
-          </div>
-        </div>
-        <input class="form-control" placeholder="Full Name" type="text" /> -->
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="inputEmail">Email</label>
           <input
-            type="text"
+            type="email"
             class="form-control"
             id="inputEmail"
+            name="email"
+            ngModel
             placeholder="Email"
           />
         </div>
         <div class="form-group col-md-6">
-          <label for="inputEmail">Password</label>
+          <label for="inputPassword">Password</label>
           <input
-            type="text"
+            type="password"
             class="form-control"
-            id="inputEmail"
+            id="inputPassword"
+            name="password"
+            ngModel
             placeholder="Password"
           />
         </div>
       </div>
       <div class="form-row">
-        <app-image-uploader class="upload form-group col-md-8">
-
-        </app-image-uploader>
-        <div class="form-group col-md-4">
+        <div
+          (imageChanged)="onImageChange($event)"
+          class="upload form-group col-md-4"
+        >
+          <label for="image_input">Avatar </label>
+          <div id="image_input">
+            <img
+              class="img-fluid rounded-circle"
+              [src]="imageUrl"
+              alt="User Image"
+              style="
+                width: 70px;
+                height: 70px;
+                object-fit: cover;
+                cursor: pointer;
+              "
+              (click)="triggerUpload()"
+            />
+            <input
+              type="file"
+              accept="image/*"
+              
+              (change)="onFileChange($event)"
+              style="display: none"
+              id="imageInput"
+              name="image"
+            />
+          </div>
+        </div>
+        <div class="form-group col-md-8">
           <label for="inputState">Role</label>
-          <select id="inputState" class="form-control">
-            <option selected>Choose...</option>
-            <option>...</option>
+          <select id="inputState" class="form-control" name="role" ngModel>
+            <option value="" selected>Choose...</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
           </select>
         </div>
       </div>
-
       <button type="submit" class="btn btn-danger btn-round btn-lg">
         Sign in
       </button>

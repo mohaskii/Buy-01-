@@ -3,18 +3,31 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-image-uploader',
   template: `
-            <label for="inputAvatar">Avatar</label>
-          <input
-            type="text"
-            class="form-control"
-            id="inputAvatar"
-            placeholder="Upload avatar"
-          />
-    <input type="file" accept="image/*" (change)="onFileChange($event)">
-    `,
+  <label for="image_input">Avatar </label>
+    <div id ="image_input">
+      <img class=" img-fluid rounded-circle" 
+           [src]="imageUrl" 
+           
+           alt="User Image" 
+           style="width: 70px; height: 70px; object-fit: cover; cursor: pointer;"
+           (click)="triggerUpload()">
+      <input type="file" 
+             accept="image/*" 
+             (change)="onFileChange($event)" 
+             style="display: none;" 
+             id="imageInput"
+             
+             name = "image">
+    </div>
+  `,
+  styles: [`
+    .img-center {
+      margin: 0 auto;
+    }
+  `]
 })
 export class ImageUploaderComponent {
-  imageUrl: string | ArrayBuffer | null = null;
+  imageUrl: string | ArrayBuffer | null = 'assets/upload-icon-20632.png';
 
   onFileChange(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -27,5 +40,10 @@ export class ImageUploaderComponent {
       };
       reader.readAsDataURL(target.files[0]);
     }
+  }
+
+  triggerUpload(): void {
+    const input = document.getElementById('imageInput') as HTMLInputElement;
+    input.click();
   }
 }

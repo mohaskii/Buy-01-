@@ -5,6 +5,10 @@ import { RouterModule } from "@angular/router";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { HttpClientModule } from "@angular/common/http";
+import {   } from '@angular/forms';
+import {BrowserModule}  from '@angular/platform-browser';
+import { RegisterFormComponent } from "./pages/examples/register-form/register-form.component";
+
 
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { ProgressbarModule } from "ngx-bootstrap/progressbar";
@@ -25,13 +29,17 @@ import { RegisterpageComponent } from "./pages/examples/registerpage/registerpag
 import { LandingpageComponent } from "./pages/examples/landingpage/landingpage.component";
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    // RegisterFormComponent
+
     // IndexComponent,
     // ProfilepageComponent,
     // RegisterpageComponent,
     // LandingpageComponent
   ],
   imports: [
+    BrowserModule,
+    // ReactiveFormsModule,
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,

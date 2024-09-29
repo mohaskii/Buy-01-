@@ -23,6 +23,9 @@ import { RegisterpageComponent } from "./examples/registerpage/registerpage.comp
 import { LandingpageComponent } from "./examples/landingpage/landingpage.component";
 import { RegisterFormComponent } from './examples/register-form/register-form.component';
 import { ImageUploaderComponent } from "./examples/image-uploader/imagePploader.component";
+import { FooterComponent } from "../components/footer/app-footer.component";
+import { HeaderComponent } from "../components/header/app-footer.component";
+import { HeaderComponentWithUser } from "../components/headerwithUser/app-header-with-user.component";
 
 @NgModule({
   imports: [
@@ -49,7 +52,10 @@ import { ImageUploaderComponent } from "./examples/image-uploader/imagePploader.
     RegisterpageComponent,
     LandingpageComponent,
     RegisterFormComponent ,
-    ImageUploaderComponent
+    ImageUploaderComponent,
+    FooterComponent,
+    HeaderComponent,
+    HeaderComponentWithUser
   ],
   exports: [
     IndexComponent,
