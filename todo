@@ -9,7 +9,7 @@
 ## 2. Microservices Development
 
 ### 2.1 User Service
-- [ ] Implement user registration (client/seller)
+✔ [ ] Implement user registration (client/seller) @done(24-09-29 12:10)
 - [ ] Develop authentication system (JWT)
 - [ ] Create user profile management
 - [ ] Implement avatar upload for sellers
