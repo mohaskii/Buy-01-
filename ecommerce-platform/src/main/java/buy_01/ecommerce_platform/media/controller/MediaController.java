@@ -30,7 +30,7 @@ public class MediaController {
         return ResponseEntity.ok(media);
     }
 
-    @PostMapping
+    @PostMapping("/product")
     public ResponseEntity<Media> uploadMedia(@RequestParam("file") MultipartFile file, @RequestParam("productId") String productId) {
         try {
             Media media = mediaService.uploadMedia(file, productId);
@@ -39,6 +39,7 @@ public class MediaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Media> updateMedia(@PathVariable String id, @RequestBody Media media) {
