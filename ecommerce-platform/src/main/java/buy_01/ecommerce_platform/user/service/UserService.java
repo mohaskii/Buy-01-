@@ -4,6 +4,8 @@ import buy_01.ecommerce_platform.user.model.User;
 import buy_01.ecommerce_platform.user.model.UserRole;
 import buy_01.ecommerce_platform.user.repository.UserRepository;
 import buy_01.ecommerce_platform.exception.ResourceNotFoundException;
+import buy_01.ecommerce_platform.service.KafkaMessageService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,11 +21,13 @@ public class UserService implements UserDetailsService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final KafkaMessageService kafkaMessageService;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, KafkaMessageService kafkaMessageService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.kafkaMessageService = kafkaMessageService;
     }
 
     // Méthode pour récupérer tous les utilisateurs
@@ -39,7 +43,9 @@ public class UserService implements UserDetailsService{
 
     // Méthode pour créer un nouvel utilisateur
     public User createUser(User user) {
-        return userRepository.save(user);
+        User newUser = userRepository.save(user);
+        kafkaMessageService.sendUserMessage("Nouvel utilisateur créé : " + newUser.getId());
+        return newUser;
     }
 
     // Méthode pour mettre à jour un utilisateur
@@ -49,7 +55,9 @@ public class UserService implements UserDetailsService{
             existingUser.setName(user.getName());
             existingUser.setEmail(user.getEmail());
             // Vous pouvez également mettre à jour d'autres informations si nécessaire
-            return userRepository.save(existingUser);
+            User userUpdated = userRepository.save(existingUser);
+            kafkaMessageService.sendUserMessage("Utilisateur" + userUpdated.getId() + "à été mis à jour");
+            return userUpdated;
         }
         throw new ResourceNotFoundException("User not found with id: " + id);
     }
@@ -76,7 +84,10 @@ public class UserService implements UserDetailsService{
         }
 
         // Sauvegarder le nouvel utilisateur
-        return userRepository.save(user);
+        user = userRepository.save(user);
+        kafkaMessageService.sendUserMessage("Utilisateur" + user.getId() + "à été ajouté");
+        return user;
+
     }
 
     @Override

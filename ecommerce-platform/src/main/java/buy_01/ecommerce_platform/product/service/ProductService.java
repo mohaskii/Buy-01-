@@ -2,6 +2,8 @@ package buy_01.ecommerce_platform.product.service;
 
 import buy_01.ecommerce_platform.product.model.Product;
 import buy_01.ecommerce_platform.product.repository.ProductRepository;
+import buy_01.ecommerce_platform.service.KafkaMessageService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +15,14 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    private final KafkaMessageService kafkaMessageService;
+
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public ProductService(KafkaMessageService kafkaMessageService) {
+        this.kafkaMessageService = kafkaMessageService;
     }
 
     public Product getProductById(String id) {
@@ -22,7 +30,9 @@ public class ProductService {
     }
 
     public Product createProduct(Product product) {
-        return productRepository.save(product);
+        Product newProduct = productRepository.save(product);
+        kafkaMessageService.sendProductMessage("Nouveau produit créé : " + newProduct.getId());
+        return newProduct;
     }
 
     public Product updateProduct(String id, Product product) {
@@ -33,7 +43,8 @@ public class ProductService {
             existingProduct.setPrice(product.getPrice());
             existingProduct.setQuantity(product.getQuantity());
             existingProduct.setUserId(product.getUserId());
-            return productRepository.save(existingProduct);
+            Product productUpdated = productRepository.save(existingProduct);
+            kafkaMessageService.sendProductMessage("Produit: " + productUpdated.getId() + "à été mis à jour");
         }
         return null;
     }

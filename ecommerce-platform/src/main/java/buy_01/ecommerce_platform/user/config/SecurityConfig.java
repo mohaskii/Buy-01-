@@ -1,9 +1,11 @@
 package buy_01.ecommerce_platform.user.config;
 
+import buy_01.ecommerce_platform.service.KafkaMessageService;
 import buy_01.ecommerce_platform.user.filter.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -50,4 +52,10 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
+    @Bean
+    public KafkaMessageService kafkaMessageService(KafkaTemplate<String, Object> kafkaTemplate) {
+        return new KafkaMessageService(kafkaTemplate);
+    }
+
 }

@@ -2,6 +2,8 @@ package buy_01.ecommerce_platform.media.service;
 
 import buy_01.ecommerce_platform.media.model.Media;
 import buy_01.ecommerce_platform.media.repository.MediaRepository;
+import buy_01.ecommerce_platform.service.KafkaMessageService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +22,12 @@ public class MediaService {
 
     private final Path root = Paths.get("uploads");
 
+    private final KafkaMessageService kafkaMessageService;
+
+    public MediaService(KafkaMessageService kafkaMessageService) {
+        this.kafkaMessageService = kafkaMessageService;
+    }
+
     public List<Media> getAllMedia() {
         return mediaRepository.findAll();
     }
@@ -33,7 +41,9 @@ public class MediaService {
         Media media = new Media();
         media.setImagePath(this.root.resolve(file.getOriginalFilename()).toString());
         media.setProductId(productId);
-        return mediaRepository.save(media);
+        media = mediaRepository.save(media);
+        kafkaMessageService.sendMediaMessage("Nouveau média uploadé : " + media.getId());
+        return media;
     }
 
     public Media updateMedia(String id, Media media) {
@@ -42,7 +52,9 @@ public class MediaService {
             // Use getters and setters instead of direct access
             existingMedia.setImagePath(media.getImagePath());
             existingMedia.setProductId(media.getProductId());
-            return mediaRepository.save(existingMedia);
+            existingMedia = mediaRepository.save(existingMedia);
+            kafkaMessageService.sendMediaMessage("Media" + media.getId() + "à été mis à jour");
+            return existingMedia;
         }
         return null;
     }
