@@ -8,10 +8,10 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<groupId>buy_01.user</groupId>
-	<artifactId>user-service</artifactId>
+	<groupId>buy_01.media</groupId>
+	<artifactId>media-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>user-service</name>
+	<name>media-service</name>
 
 	<dependencies>
 		<!-- MongoDB dependency -->
