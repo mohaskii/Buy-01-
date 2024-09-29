@@ -1,0 +1,64 @@
+<div class="square square-7" id="square7"></div>
+<div class="square square-8" id="square8"></div>
+<div class="card card-register">
+  <div class="card-header">
+    <img alt="Card image" class="card-img" src="assets/img/square1-red.png" />
+
+    <h4 class="card-title">Register</h4>
+  </div>
+  <div class="card-body">
+    <form>
+      <div class="form-group">
+        <label for="inputEmail">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="inputEmail"
+          placeholder="Full Name"
+        />
+        <!-- <div class="input-group-prepend">
+          <div class="input-group-text">
+            <i class="tim-icons icon-single-02"></i>
+          </div>
+        </div>
+        <input class="form-control" placeholder="Full Name" type="text" /> -->
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputEmail">Email</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputEmail"
+            placeholder="Email"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputEmail">Password</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputEmail"
+            placeholder="Password"
+          />
+        </div>
+      </div>
+      <div class="form-row">
+        <app-image-uploader class="upload form-group col-md-8">
+
+        </app-image-uploader>
+        <div class="form-group col-md-4">
+          <label for="inputState">Role</label>
+          <select id="inputState" class="form-control">
+            <option selected>Choose...</option>
+            <option>...</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-danger btn-round btn-lg">
+        Sign in
+      </button>
+    </form>
+  </div>
+</div>

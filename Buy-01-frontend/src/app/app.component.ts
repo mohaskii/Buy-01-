@@ -7,18 +7,25 @@ import {
 } from "@angular/core";
 import { Location } from "@angular/common";
 import { DOCUMENT } from "@angular/common";
-
+import { Router } from '@angular/router';
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"]
 })
+
+
 export class AppComponent implements OnInit {
+  isAuthenticated: boolean = false;
+  private router: Router;
   constructor(
     private renderer: Renderer2,
     public location: Location,
-    @Inject(DOCUMENT) document
-  ) {}
+    @Inject(DOCUMENT) document,
+    router: Router
+  ) {
+    this.router = router;
+  }
   @HostListener("window:scroll", ["$event"])
   onWindowScroll(e) {
     if (window.pageYOffset > 100) {
@@ -37,5 +44,15 @@ export class AppComponent implements OnInit {
   }
   ngOnInit() {
     this.onWindowScroll(event);
+    this.checkAuthentication();
   }
+  checkAuthentication(): void {
+    // Replace this with your actual authentication logic
+    // this.isAuthenticated = true; // Set to true if authenticated 
+
+    if (!this.isAuthenticated) {
+      this.router.navigate(['register']);
+    }
+  }
+
 }
