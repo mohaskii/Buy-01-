@@ -3,7 +3,7 @@ package buy_01.ecommerce_platform.user.service;
 import buy_01.ecommerce_platform.user.model.User;
 import buy_01.ecommerce_platform.user.repository.UserRepository;
 
-import org.apache.kafka.common.errors.ResourceNotFoundException;
+import buy_01.ecommerce_platform.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
-
+    
     // Méthode pour créer un nouvel utilisateur
     public User createUser(User user) {
         return userRepository.save(user);
