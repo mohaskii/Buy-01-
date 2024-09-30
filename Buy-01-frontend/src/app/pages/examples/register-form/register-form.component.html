@@ -15,7 +15,7 @@
           id="inputName"
           name="name"
           ngModel
-          placeholder="Full Name"
+          placeholder="Full Name" 
         />
       </div>
       <div class="form-row">
@@ -27,6 +27,7 @@
             id="inputEmail"
             name="email"
             ngModel
+            (change)="onEmailChange($event)"
             placeholder="Email"
           />
         </div>

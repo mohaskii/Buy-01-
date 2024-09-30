@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { User } from '../models/Users';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { User } from "../models/Users";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class UserService {
+  private apiUrl = "http://localhost:8081/api/users";
 
-  private apiUrl = 'http://localhost:8081/api/users';
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}`);
@@ -20,10 +19,10 @@ export class UserService {
     return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
   createUser(user: User): Observable<User> {
-    return this.http.post<User>(this.apiUrl+ "/register", user);
+    return this.http.post<User>(this.apiUrl + "/register", user);
   }
-  
-  loginUser(user: User): Observable<User> {
+
+  loginUser(user: User): Observable<any> {
     return this.http.post<User>(this.apiUrl + "/login", user);
   }
 
@@ -34,5 +33,10 @@ export class UserService {
   deleteUser(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+  sendAvatar(file: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/uploadavatar`, file);
+  }
 
+  //TODO: implement `sendAvatar` function cette fonction
+  //avoir comme parametres un fomr qui contien une seule valeur file apres l'envoyer en mulpaert sur le enpont "uploadavatar"
 }

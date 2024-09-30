@@ -38,6 +38,7 @@ export class ImageUploaderComponent {
           this.imageUrl = e.target.result as string | ArrayBuffer;
         }
       };
+   
       reader.readAsDataURL(target.files[0]);
     }
   }

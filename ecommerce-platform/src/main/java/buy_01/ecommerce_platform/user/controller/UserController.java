@@ -5,6 +5,8 @@ import buy_01.ecommerce_platform.user.dto.LoginRequest;
 import buy_01.ecommerce_platform.user.model.User;
 import buy_01.ecommerce_platform.user.service.UserService;
 import buy_01.ecommerce_platform.user.service.JwtService;
+import buy_01.ecommerce_platform.user.service.StorageService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-
-
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -36,11 +36,26 @@ public class UserController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private StorageService storageService;
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
+    }
+
+    @PostMapping("/uploadavatar")
+    public ResponseEntity<String> uploadAvatar(@RequestParam("file") MultipartFile file) {
+        try {       
+            String fileName = storageService.storeFile(file);
+            return ResponseEntity.ok(fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Renvoyer une erreur HTTP avec un message d'erreur    
+            return ResponseEntity.badRequest().body(e.getMessage());
+
+        }
     }
 
     @GetMapping("/{id}")
@@ -63,7 +78,7 @@ public class UserController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User the_user = userService.findByEmail(userDetails.getUsername());
 
-                String jwt = jwtService.generateToken(userDetails, the_user);
+        String jwt = jwtService.generateToken(userDetails, the_user);
 
         return ResponseEntity.ok(new JwtResponse(jwt));
     }
