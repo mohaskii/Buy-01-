@@ -2,42 +2,50 @@ package buy_01.ecommerce_platform.media.service;
 
 import buy_01.ecommerce_platform.media.model.Media;
 import buy_01.ecommerce_platform.media.repository.MediaRepository;
-import buy_01.ecommerce_platform.service.KafkaMessageService;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
+import java.util.Arrays;
 
 @Service
 public class MediaService {
 
-    private final MediaRepository mediaRepository;
-    private final RestTemplate restTemplate;
-    private final String productServiceUrl;
-    private final Path root;
-    
-    private final KafkaMessageService kafkaMessageService;
+    private static final Logger logger = LoggerFactory.getLogger(MediaService.class);
 
-    public MediaService(MediaRepository mediaRepository, 
-                        RestTemplate restTemplate, 
-                        @Value("${product.service.url}") String productServiceUrl,
-                        @Value("${upload.path}") String uploadPath,
-                        KafkaMessageService kafkaMessageService) {
-        this.mediaRepository = mediaRepository;
-        this.restTemplate = restTemplate;
-        this.productServiceUrl = productServiceUrl;
-        this.root = Paths.get(uploadPath);
-        this.kafkaMessageService = kafkaMessageService;
+    @Autowired
+    private MediaRepository mediaRepository;
+
+    @Value("${file.upload-dir:uploads}")
+    private String uploadDir;
+
+    private static final List<String> ALLOWED_CONTENT_TYPES = Arrays.asList(
+        "image/jpeg",
+        "image/png",
+        "image/gif"
+    );
+
+    @PostConstruct
+    public void init() {
+        try {
+            Files.createDirectories(Paths.get(uploadDir));
+        } catch (IOException e) {
+            throw new RuntimeException("Could not create upload directory!", e);
+        }
     }
 
     public List<Media> getAllMedia() {
@@ -50,68 +58,67 @@ public class MediaService {
     }
 
     public Media uploadMedia(MultipartFile file, String productId) throws IOException {
-        if (!productExists(productId)) {
-            throw new RuntimeException("Le produit avec l'ID " + productId + " n'existe pas");
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("Failed to store empty file.");
         }
 
-        validateFile(file);
+        if (!isValidImageFile(file)) {
+            throw new IllegalArgumentException("File must be a valid image (JPEG, PNG, or GIF).");
+        }
 
-        String fileName = generateFileName(file);
-        Path filePath = saveFile(file, fileName);
+        String filename = generateUniqueFilename(file.getOriginalFilename());
+        Path destinationFile = resolveDestinationFilePath(filename);
+
+        try {
+            Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            logger.error("Failed to store file.", e);
+            throw new IOException("Failed to store file.", e);
+        }
 
         Media media = new Media();
-        media.setImagePath(filePath.toString());
+        media.setImagePath(destinationFile.toString());
         media.setProductId(productId);
-        media = mediaRepository.save(media);
+        return mediaRepository.save(media);
+    }
 
-        kafkaMessageService.sendMediaMessage("Nouveau média uploadé : " + media.getId());
-        return media;
+    private boolean isValidImageFile(MultipartFile file) {
+        String contentType = file.getContentType();
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        return contentType != null && ALLOWED_CONTENT_TYPES.contains(contentType) &&
+               filename != null && (filename.toLowerCase().endsWith(".jpg") || 
+                                    filename.toLowerCase().endsWith(".jpeg") || 
+                                    filename.toLowerCase().endsWith(".png") || 
+                                    filename.toLowerCase().endsWith(".gif"));
+    }
+
+    private String generateUniqueFilename(String originalFilename) {
+        String extension = StringUtils.getFilenameExtension(originalFilename);
+        return UUID.randomUUID().toString() + "." + extension;
+    }
+
+    private Path resolveDestinationFilePath(String filename) throws IOException {
+        Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+        return uploadPath.resolve(filename);
     }
 
     public Media updateMedia(String id, Media media) {
         Media existingMedia = getMediaById(id);
         existingMedia.setImagePath(media.getImagePath());
         existingMedia.setProductId(media.getProductId());
-        existingMedia = mediaRepository.save(existingMedia);
-        kafkaMessageService.sendMediaMessage("Media " + media.getId() + " a été mis à jour");
-        return existingMedia;
+        return mediaRepository.save(existingMedia);
     }
 
     public void deleteMedia(String id) {
-        mediaRepository.deleteById(id);
-    }
-
-    private boolean productExists(String productId) {
+        Media media = getMediaById(id);
         try {
-            restTemplate.getForEntity(productServiceUrl + "/api/products/" + productId, String.class);
-            return true;
-        } catch (HttpClientErrorException.NotFound e) {
-            return false;
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la vérification de l'existence du produit", e);
+            Files.deleteIfExists(Paths.get(media.getImagePath()));
+        } catch (IOException e) {
+            logger.error("Failed to delete file: " + media.getImagePath(), e);
         }
-    }
-
-    private void validateFile(MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new RuntimeException("Le fichier est vide");
-        }
-        if (file.getSize() > 2 * 1024 * 1024) {
-            throw new RuntimeException("La taille du fichier dépasse la limite de 2MB");
-        }
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            throw new RuntimeException("Seuls les fichiers image sont autorisés");
-        }
-    }
-
-    private String generateFileName(MultipartFile file) {
-        return System.currentTimeMillis() + "_" + file.getOriginalFilename();
-    }
-
-    private Path saveFile(MultipartFile file, String fileName) throws IOException {
-        Path filePath = this.root.resolve(fileName);
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        return filePath;
+        mediaRepository.deleteById(id);
     }
 }
