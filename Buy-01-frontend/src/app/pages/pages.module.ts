@@ -29,6 +29,8 @@ import { HeaderComponent } from "../components/header/app-footer.component";
 import { HeaderComponentWithUser } from "../components/headerwithUser/app-header-with-user.component";
 import { HeaderShowComponent } from "../components/headershow/app-header.-show.component";
 import { LoginFormComponent } from "./examples/login-form /login-form.component";
+import { AppCard } from "../components/productcard/app-card.component";
+import { ProductComponent } from "./examples/productpage/profilepage.component";
 
 @NgModule({
   imports: [
@@ -62,6 +64,8 @@ import { LoginFormComponent } from "./examples/login-form /login-form.component"
     HeaderComponentWithUser,  
     HeaderShowComponent,
     LoginFormComponent,   // Assurez-vous d'ajouter LoginFormComponent dans le module pagesModule.ts
+    AppCard,
+    ProductComponent
   ],
   exports: [
     IndexComponent,
