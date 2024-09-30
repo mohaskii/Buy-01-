@@ -22,10 +22,13 @@ import { ProfilepageComponent } from "./examples/profilepage/profilepage.compone
 import { RegisterpageComponent } from "./examples/registerpage/registerpage.component";
 import { LandingpageComponent } from "./examples/landingpage/landingpage.component";
 import { RegisterFormComponent } from './examples/register-form/register-form.component';
+import { LoginpageComponent } from "./examples/loginpage/loginpage.component";
 import { ImageUploaderComponent } from "./examples/image-uploader/imagePploader.component";
 import { FooterComponent } from "../components/footer/app-footer.component";
 import { HeaderComponent } from "../components/header/app-footer.component";
 import { HeaderComponentWithUser } from "../components/headerwithUser/app-header-with-user.component";
+import { HeaderShowComponent } from "../components/headershow/app-header.-show.component";
+import { LoginFormComponent } from "./examples/login-form /login-form.component";
 
 @NgModule({
   imports: [
@@ -51,17 +54,21 @@ import { HeaderComponentWithUser } from "../components/headerwithUser/app-header
     ProfilepageComponent,
     RegisterpageComponent,
     LandingpageComponent,
+    LoginpageComponent,
     RegisterFormComponent ,
     ImageUploaderComponent,
     FooterComponent,
     HeaderComponent,
-    HeaderComponentWithUser
+    HeaderComponentWithUser,  
+    HeaderShowComponent,
+    LoginFormComponent,   // Assurez-vous d'ajouter LoginFormComponent dans le module pagesModule.ts
   ],
   exports: [
     IndexComponent,
     ProfilepageComponent,
     RegisterpageComponent,
-    LandingpageComponent
+    LandingpageComponent,
+    LoginpageComponent,
   ],
   providers: []
 })

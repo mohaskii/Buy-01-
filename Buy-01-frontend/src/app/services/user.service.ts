@@ -20,7 +20,11 @@ export class UserService {
     return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
   createUser(user: User): Observable<User> {
-    return this.http.post<User>(this.apiUrl, user);
+    return this.http.post<User>(this.apiUrl+ "/register", user);
+  }
+  
+  loginUser(user: User): Observable<User> {
+    return this.http.post<User>(this.apiUrl + "/login", user);
   }
 
   updateUser(id: string, user: User): Observable<User> {
