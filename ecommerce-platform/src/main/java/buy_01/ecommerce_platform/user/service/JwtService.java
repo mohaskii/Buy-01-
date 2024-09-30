@@ -1,6 +1,7 @@
 package buy_01.ecommerce_platform.user.service;
 
 import buy_01.ecommerce_platform.user.config.JwtConfig;
+import buy_01.ecommerce_platform.user.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -41,16 +42,25 @@ public class JwtService {
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
-
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, User user) {
         Map<String, Object> claims = new HashMap<>();
+        // Ajout des informations spécifiques de l'utilisateur
+        claims.put("name", user.getName());
+        claims.put("role", user.getRole().toString());
+        claims.put("avatar", user.getAvatar());
+        claims.put("id", user.getId());
+        
         return createToken(claims, userDetails.getUsername());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getExpiration()))
-                .signWith(SignatureAlgorithm.HS256, jwtConfig.getSecret()).compact();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getExpiration() * 1000))
+                .signWith(SignatureAlgorithm.HS256, jwtConfig.getSecret())
+                .compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
