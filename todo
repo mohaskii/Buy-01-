@@ -3,7 +3,7 @@
 ## 1. Project Setup
 ✔ Initialize Git repository @done(24-09-27 20:18)
 ✔ Set up project structure for each service @done(24-09-28 11:27)
-- Configure Kafka for inter-service communication
+✔ Configure Kafka for inter-service communication @done(24-09-29 19:33)
 ✔ Set up MongoDB databases for each service @done(24-09-28 11:27)
 
 ## 2. Microservices Development
@@ -12,7 +12,7 @@
 ✔ Implement user registration (client/seller) @done(24-09-29 12:10)
 ✔ Develop authentication system (JWT) @done(24-09-29 13:05)
 - Create user profile management
-- Implement avatar upload for sellers
+✔ Implement avatar upload for sellers @done(24-09-29 19:56)
 
 ### 2.2 Product Service
 ✔ Develop CRUD operations for products @done(24-09-29 14:15)

@@ -21,6 +21,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    @Autowired
     public ProductService(KafkaMessageService kafkaMessageService) {
         this.kafkaMessageService = kafkaMessageService;
     }
